@@ -6,7 +6,7 @@
 /*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 22:59:28 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/03/19 00:37:12 by fheaton-         ###   ########.fr       */
+/*   Updated: 2022/03/23 17:06:47 by fheaton-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,20 @@ int	check_args(int argc, char **argv, t_list **lst)
 	if(argc == 6)
 		l->nmr_eat = ft_atoi(argv[5]);
 	if (l->nmr_philo < 1 || l->t_die < 1 || l->t_eat < 1 \
-		|| l->t_sleep < 1 || (argc == 6 && t->nmr_eat < 1))
+		|| l->t_sleep < 1 || (argc == 6 && l->nmr_eat < 1))
 		return (0);
-	t->philos = ft_calloc(t->nmr_philo, sizeof(t_philo));
+	l->philos = ft_calloc(t->nmr_philo, sizeof(t_philo));
 	return (1);
 }
 
-int	start(t_list *lst)
+int	start_threads(t_list *lst)
 {
 	int a;
 	
 	a = -1;
 	while (++a != lst->nmr_philo)
 	{
-		if (pthread_create(&t->philos[a], NULL, start_routine, lst))
+		if (pthread_create(&lst->philos[a], NULL, start_routine, lst))
 		{
 			printf("couldn't create thread nmr:%d\n", (a + 1));
 			return (0);
@@ -58,22 +58,55 @@ int	start(t_list *lst)
 	return (1);
 }
 
+void	clear(t_list *l)
+{
+	int	a;
+
+	if (!l)
+		return ;
+	a = -1;
+	while (++a < l->nmr_philo)
+	{
+		pthread_mutex_destroy(&l->forks[a]);
+	}
+	pthread_mutex_destroy(&l->master);
+	free(l->philos);
+	free(l->forks);
+	free(l);
+}
+
 int	main(int argc, char **argv)
 {
 	t_list	*lst;
 
 	if (argc != 5 || argc != 6)
 	{
-		error("nmr of args is wrong")
+		error("nmr of args is wrong");
 		return (0);
 	}
+	lst = ft_calloc(sizeof(t_list), 1);
+	if (!lst)
+		return (0);
 	if (!check_args(argc, argv, &lst))
 	{
 		error("invalid args");
 		return (0);
 	}
-	if (!start(lst))
+	if (gettimeofday(&lst->start, NULL))
+	{
+		error("couldn't get time of day");
 		return (0);
+	}
+	if (!start_threads(lst))
+	{
+		error("couldn't create threads");
+		clear(lst);
+		return (0);
+	}
+
+
+	cada garfo é um mutex
+
 
 	argc[1] = number_of_philosophers and number of forks
 	argc[2] = time_to_die (in milliseconds)
