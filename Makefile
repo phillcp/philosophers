@@ -37,7 +37,8 @@
 ################################################################################
 
 # Name of a single binary. Add as many variables as required by the project
-NAME1 := main
+NAME1 := philo
+# NAME2 :=
 
 # The names of all the binaries. Add aditional variables created above separated
 # by space.
@@ -64,7 +65,7 @@ VERBOSE := 1
 # in others. If for example you just want to clean the root directory the clean
 # rule will be executed in any other makefile specified. You can deactivate the
 # creation of these targets by setting the bellow variable to 0.
-CREATE_LIB_TARGETS := 1
+CREATE_LIB_TARGETS := 0
 
 # Pedantic allows for extra warning flags to be used while compiling. If set to
 # true these flags are applied. If set to anything else the flags will not be
@@ -84,7 +85,7 @@ LANG := C
 CC := clang
 
 # Compiler flags
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -pthread
 
 # Pedantic flags
 ifeq (${PEDANTIC},true)
@@ -127,10 +128,10 @@ MSAN := -fsanitize=memory -fsanitize-memory-track-origins
 # Root Folders
 ################################################################################
 
-BIN_ROOT := bin/
+BIN_ROOT := ./
 DEP_ROOT := dep/
 INC_ROOT := inc/
-LIB_ROOT := libft/
+# LIB_ROOT := libft/
 OBJ_ROOT := obj/
 SRC_ROOT := src/
 
@@ -139,22 +140,23 @@ SRC_ROOT := src/
 ################################################################################
 
 # Libft
-LIBFT_ROOT := ${LIB_ROOT}
-LIBFT_INC := ${LIBFT_ROOT}inc/
-LIBFT := ${LIBFT_ROOT}/bin/libft.a
+# LIBFT_ROOT := ${LIB_ROOT}
+# LIBFT_INC := ${LIBFT_ROOT}inc/
+# LIBFT := ${LIBFT_ROOT}/bin/libft.a
 
-INC_DIRS += ${LIBFT_INC}
-LIBS += -L${LIBFT_ROOT}/bin -lft
+# INC_DIRS += ${LIBFT_INC}
+# LIBS += -L${LIBFT_ROOT}/bin -lft
 
-INC_DIRS += ./minilibx-linux/
-LIBS += -L./minilibx-linux/ -lmlx -lm -lXext -lX11
+# INC_DIRS += ./minilibx-linux/
+# LIBS += -L./minilibx-linux/ -lmlx -lm -lXext -lX11
 
 # Libraries for which to create default targets. All libraries in this list will
 # have targets created autimatically. The targets that are created are set in
 # DEFAULT_LIB_RULES. The targets will have to format <library root>//<target>
 # and it will invoke make as follows:
 # `make -C <library root> <rule>`
-DEFAULT_LIBS := ${LIBFT_ROOT}
+# DEFAULT_LIBS := ${LIBFT_ROOT}
+DEFAULT_LIBS :=
 
 # Default targets to create for libraries specified in DEFAULT_LIBS. This is a
 # small list of common targets in most makefiles.
@@ -177,12 +179,13 @@ DEFAULT_LIB_RULES += debug_tsan debug_tsan_re debug_msan debug_msan_re
 
 # Lists of ':' separated folders inside SRC_ROOT containing source files. Each
 # folder needs to end with a '/'. The path to the folders is relative to
-# SRC_ROOTIf SRC_ROOT contains files './' needs to be in the list. Each list is
+# SRC_ROOT If SRC_ROOT contains files './' needs to be in the list. Each list is
 # separated by a space or by going to a new line and adding onto the var.
 # Exemple:
 # DIRS := folder1/:folder2/
 # DIRS += folder1/:folder3/:folder4/
 DIRS := ./
+# DIRS += actions/:stack/:checker/:common/
 
 SRC_DIRS_LIST := $(addprefix ${SRC_ROOT},${DIRS})
 SRC_DIRS_LIST := $(foreach dl,${SRC_DIRS_LIST},$(subst :,:${SRC_ROOT},${dl}))
@@ -253,13 +256,11 @@ vpath %.d $(DEP_DIRS)
 all: ${BINS}
 
 .SECONDEXPANSION:
-${BIN_ROOT}${NAME1}: ${LIBFT} $$(call get_files,$${@F},$${OBJS_LIST})
+${BIN_ROOT}${NAME1}: $$(call get_files,$${@F},$${OBJS_LIST})
 	${AT}printf "\033[33m[CREATING ${@F}]\033[0m\n" ${BLOCK}
 	${AT}mkdir -p ${@D} ${BLOCK}
 	${AT}${CC} ${CFLAGS} ${INCS} ${ASAN_FILE}\
 		$(call get_files,${@F},${OBJS_LIST}) ${LIBS} -o $@ ${BLOCK}
-
-${LIBFT}: $$(call get_lib_target,$${DEFAULT_LIBS},all) ;
 
 ################################################################################
 # Clean Targets
@@ -267,26 +268,22 @@ ${LIBFT}: $$(call get_lib_target,$${DEFAULT_LIBS},all) ;
 
 clean: $$(call get_lib_target,$${DEFAULT_LIBS},$$@)
 	${AT}printf "\033[38;5;1m[REMOVING OBJECTS]\033[0m\n" ${BLOCK}
-	${AT}rm -rf ${OBJ_ROOT} ${BLOCK}
-	# ${AT}mkdir -p ${OBJ_ROOT} ${BLOCK}
-	# ${AT}find ${OBJ_ROOT} -type f -name "*.o" -delete ${BLOCK}
+	${AT}mkdir -p ${OBJ_ROOT} ${BLOCK}
+	${AT}find ${OBJ_ROOT} -type f -name "*.o" -delete ${BLOCK}
 
 fclean: $$(call get_lib_target,$${DEFAULT_LIBS},$$@)
 	${AT}printf "\033[38;5;1m[REMOVING OBJECTS]\033[0m\n" ${BLOCK}
-	${AT}rm -rf ${OBJ_ROOT} ${BLOCK}
-	# ${AT}mkdir -p ${OBJ_ROOT} ${BLOCK}
-	# ${AT}find ${OBJ_ROOT} -type f -name "*.o" -delete ${BLOCK}
+	${AT}mkdir -p ${OBJ_ROOT} ${BLOCK}
+	${AT}find ${OBJ_ROOT} -type f -name "*.o" -delete ${BLOCK}
 	${AT}printf "\033[38;5;1m[REMOVING BINARIES]\033[0m\n" ${BLOCK}
-	${AT}rm -rf ${BIN_ROOT} ${BLOCK}
-	# ${AT}mkdir -p ${BIN_ROOT} ${BLOCK}
-	# ${AT}find ${BIN_ROOT} -type f\
-	# 	$(addprefix -name ,${NAMES}) -delete ${BLOCK}
+	${AT}mkdir -p ${BIN_ROOT} ${BLOCK}
+	${AT}find ${BIN_ROOT} -type f\
+		$(addprefix -name ,${NAMES}) -delete ${BLOCK}
 
 clean_dep: $$(call get_lib_target,$${DEFAULT_LIBS},$$@)
 	${AT}printf "\033[38;5;1m[REMOVING DEPENDENCIES]\033[0m\n" ${BLOCK}
-	${AT}rm -rf ${DEP_ROOT} ${BLOCK}
-	# ${AT}mkdir -p ${DEP_ROOT} ${BLOCK}
-	# ${AT}find ${DEP_ROOT} -type f -name "*.d" -delete ${BLOCK}
+	${AT}mkdir -p ${DEP_ROOT} ${BLOCK}
+	${AT}find ${DEP_ROOT} -type f -name "*.d" -delete ${BLOCK}
 
 clean_all: fclean clean_dep
 
@@ -376,7 +373,7 @@ compile-test: ${addprefix compile-test/,${NAMES}}
 .PHONY: re all
 
 ################################################################################
-# Constantes
+# Constants
 ################################################################################
 
 NULL =
