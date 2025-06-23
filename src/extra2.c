@@ -6,7 +6,7 @@
 /*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:36:30 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/03/28 17:37:25 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:37:10 by fheaton-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,24 @@ void	*ft_calloc(size_t nmemb, size_t size)
 			return (NULL);
 	}
 	return ((void *)arr);
+}
+
+int	go_get_fork(t_list *l, int id)
+{
+	pthread_mutex_lock(&l->master);
+	if (l->philo_state == philo_halt)
+		return (pthread_mutex_unlock(&l->master) && 0);
+	printf("%ld %d has taken a fork\n", get_time(l), id + 1);
+	pthread_mutex_unlock(&l->master);
+	return (1);
+}
+
+int	go_think(t_list *l, int id)
+{
+	pthread_mutex_lock(&l->master);
+	if (l->philo_state == philo_halt)
+		return (pthread_mutex_unlock(&l->master) && 0);
+	printf("%ld %d is thinking\n", get_time(l), id + 1);
+	pthread_mutex_unlock(&l->master);
+	return (1);
 }

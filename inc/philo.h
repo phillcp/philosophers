@@ -6,7 +6,7 @@
 /*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 21:44:44 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/11/07 17:30:11 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:38:07 by fheaton-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_list
 	int					t_sleep;
 	int					nmr_eat;
 	int					claim;
-	int					start_parity;
 	struct timeval		start;
 	struct timeval		curr;
 	int					eaten;
@@ -92,5 +91,7 @@ int			ft_isdigit(int c);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*ft_memset(void *str, int c, size_t n);
+int			go_get_fork(t_list *l, int id);
+int			go_think(t_list *l, int id);
 
 #endif

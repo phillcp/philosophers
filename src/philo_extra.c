@@ -6,7 +6,7 @@
 /*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:20:33 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/11/07 18:01:19 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:44:14 by fheaton-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ static int	get_forks(t_list *l, int id)
 	pthread_mutex_lock(&l->forks[a]);
 	if (!check_state(l, id))
 		return (pthread_mutex_unlock(&l->forks[a]) && 0);
-	printf("%ld %d has taken a fork\n", get_time(l), id + 1);
+	if (!go_get_fork(l, id))
+		return (0);
 	bin = (((id % 2) && ((a = (id + 1) % l->nmr_philo) || 1)) || (a = id));
 	pthread_mutex_lock(&l->forks[a]);
 	if (!check_state(l, id))
@@ -68,7 +69,8 @@ static int	get_forks(t_list *l, int id)
 		pthread_mutex_unlock(&l->forks[(id + 1) % l->nmr_philo]);
 		return (0);
 	}
-	printf("%ld %d has taken a fork\n", get_time(l), id + 1);
+	if (!go_get_fork(l, id))
+		return (0);
 	return (1);
 }
 
@@ -77,11 +79,11 @@ int	peat(t_list *l, int id)
 	if (!get_forks(l, id))
 		return (0);
 	pthread_mutex_lock(&l->master);
-	(!l->start_parity) && (((id % 2) && (l->start_parity = 1))
-		|| (l->start_parity = 2));
-	pthread_mutex_unlock(&l->master);
+	if (l->philo_state == philo_halt)
+		return (pthread_mutex_unlock(&l->master) && 0);
 	l->philos[id].last_eat = get_time(l);
 	printf("%lld %d is eating\n", l->philos[id].last_eat, id + 1);
+	pthread_mutex_unlock(&l->master);
 	tr_usleep(l, id, l->t_eat);
 	if (l->nmr_eat != -1 && ++l->philos[id].eat_count == l->nmr_eat)
 	{
@@ -101,7 +103,11 @@ int	psleep(t_list *l, int id)
 	long	time;
 
 	time = get_time(l);
+	pthread_mutex_lock(&l->master);
+	if (l->philo_state == philo_halt)
+		return (pthread_mutex_unlock(&l->master) && 0);
 	printf("%ld %d is sleeping\n", time, id + 1);
+	pthread_mutex_unlock(&l->master);
 	tr_usleep(l, id, l->t_sleep);
 	if (!check_state(l, id))
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/11/07 18:00:51 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:41:13 by fheaton-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	check_state(t_list *l, int id)
 		pthread_mutex_unlock(&l->master);
 		return (0);
 	}
-	if ((time - l->philos[id].last_eat) >= l->t_die)
+	if ((time - l->philos[id].last_eat) > l->t_die)
 	{
 		if (l->philo_state != philo_halt)
 		{
@@ -94,9 +94,8 @@ void	*routine(void *lst)
 			break ;
 		if (!check_status(l) || !psleep(l, id))
 			break ;
-		if (!check_status(l))
+		if (!go_think(l, id))
 			break ;
-		printf("%ld %d is thinking\n", get_time(l), id + 1);
 	}
 	return (lst);
 }
