@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/06/02 16:41:13 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/08/11 15:58:43 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ void	*routine(void *lst)
 			break ;
 		if (!check_status(l) || !psleep(l, id))
 			break ;
-		if (!go_think(l, id))
-			break ;
+		if (!go_think(l, id) || !check_state(l, id))
+		break ;
 	}
 	return (lst);
 }

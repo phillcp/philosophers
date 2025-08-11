@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 22:59:28 by fheaton-          #+#    #+#             */
-/*   Updated: 2022/11/07 17:03:18 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:30:57 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	main(int argc, char **argv)
 		|| !start_threads(lst))
 	{
 		clear(lst);
+		printf("Args wrong\n");
 		return (1);
 	}
 	join_philos(lst);

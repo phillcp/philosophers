@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_extra.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fheaton- <fheaton-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:20:33 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/06/02 16:44:14 by fheaton-         ###   ########.fr       */
+/*   Updated: 2025/08/11 16:00:36 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	tr_usleep(t_list *l, int id, long t)
 		if ((curr + sleep) < (start + t)
 			&& curr + sleep - l->philos[id].last_eat < l->t_die)
 			usleep(sleep);
-		else
-			sleep -= 10;
+		else if (sleep - 5 > 0)
+			sleep -= 5;
 		curr = get_time(l);
 	}
 	return (1);
