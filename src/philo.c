@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/11 15:58:43 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/14 19:59:22 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,11 @@ void	*routine(void *lst)
 	{
 		printf("%ld %d has taken a fork\n", get_time(l), id + 1);
 		tr_usleep(l, id, l->t_die);
-		check_state(l, id);
+		printf("%ld %d died\n", get_time(l), id + 1);
 		return (NULL);
 	}
+	if (id + 1 % 2 == 0)
+		usleep(l->t_eat);
 	while (1)
 	{
 		if (!check_status(l) || !peat(l, id))
@@ -95,7 +97,7 @@ void	*routine(void *lst)
 		if (!check_status(l) || !psleep(l, id))
 			break ;
 		if (!go_think(l, id) || !check_state(l, id))
-		break ;
+			break ;
 	}
 	return (lst);
 }
