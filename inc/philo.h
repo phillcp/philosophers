@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 21:44:44 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/14 18:56:49 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:46:38 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,18 @@ enum e_philo_state
 
 typedef struct s_philo
 {
-	pthread_t	id;
-	long long	last_eat;
-	int			eat_count;
+	pthread_t		id;
+	struct s_list	*l;
+	int				s_id;
+	long long		last_eat;
+	int				eat_count;
 }				t_philo;
+
+typedef struct s_watch
+{
+	pthread_t	id;
+}				t_watcher;
+
 
 typedef struct s_list
 {
@@ -46,9 +54,12 @@ typedef struct s_list
 	int					eaten;
 	int					died;
 	enum e_philo_state	philo_state;
+	t_watcher			*watcher;
 	t_philo				*philos;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		master;
+	pthread_mutex_t		w_lock;
+	pthread_mutex_t		meat_lock;
 }						t_list;
 
 /*
@@ -66,15 +77,22 @@ int			check_args(int argc, char **argv, t_list **lst);
 
 void		*routine(void *lst);
 long		get_time(t_list *l);
-int			check_state(t_list *l, int id);
 
 /*
 **				philo_extra
 */
 
-int			psleep(t_list *l, int id);
+void		psleep(t_list *l, int id);
 int			peat(t_list *l, int id);
-int			tr_usleep(t_list *l, int id, long t);
+void		tr_usleep(t_list *l, int id, long t);
+
+/*
+**				monitor
+*/
+
+void		*monitor(void *arg);
+int			check_state(t_list *l);
+void		init_table(t_list *l, char **argv);
 
 /*
 **				extra
@@ -91,7 +109,8 @@ int			ft_isdigit(int c);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*ft_memset(void *str, int c, size_t n);
-int			go_get_fork(t_list *l, int id);
-int			go_think(t_list *l, int id);
+void		go_get_fork(t_list *l, int id);
+void		go_think(t_list *l, int id);
+void		go_eat(t_list *l, int id);
 
 #endif

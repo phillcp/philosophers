@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"philo.h": "c",
+		"text_encoding": "c",
+		"iomanip": "c"
+	}
+}
