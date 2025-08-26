@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/25 19:25:22 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:49:44 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	check_halt(t_list *l)
 {
 	pthread_mutex_lock(&l->master);
 	if (l->philo_state == philo_halt)
-			return (pthread_mutex_unlock(&l->master), 0);
+		return (pthread_mutex_unlock(&l->master), 0);
 	pthread_mutex_unlock(&l->master);
 	return (1);
 }

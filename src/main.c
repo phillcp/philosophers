@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 22:59:28 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/25 19:46:41 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:49:30 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_args(int argc, char **argv, t_list **lst)
 	t_list	*l;
 	int		a;
 
-	if (!ft_isnum(argv[1]) || !ft_isnum(argv[2]) || !ft_isnum(argv[3]) \
+	if (!ft_isnum(argv[1]) || !ft_isnum(argv[2]) || !ft_isnum(argv[3])
 		|| !ft_isnum(argv[4]) || (argc == 6 && !ft_isnum(argv[5])))
 		return (0);
 	l = *lst;

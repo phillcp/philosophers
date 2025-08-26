@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 21:44:44 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/25 19:46:38 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:49:18 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct s_watch
 {
 	pthread_t	id;
 }				t_watcher;
-
 
 typedef struct s_list
 {
