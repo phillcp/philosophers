@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:36:30 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 14:09:57 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:25:19 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	}
 	return ((void *)arr);
 }
-
 
 int	print_m(t_philo *p, int id, char *str, int monitor)
 {

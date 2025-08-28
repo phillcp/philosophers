@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 12:44:18 by fiheaton          #+#    #+#             */
-/*   Updated: 2025/08/28 14:11:10 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:01:52 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	init_table(t_list *l, char **argv)
 	l->t_eat = ft_atoi(argv[3]);
 	l->t_sleep = ft_atoi(argv[4]);
 	l->nmr_eat = -1;
+	l->end = 0;
 }
 
 int	check_eat(t_list *l)
@@ -70,9 +71,9 @@ void	*monitor(void *list)
 			return (NULL);
 		if (l->nmr_eat != -1 && check_eat(l))
 		{
-			pthread_mutex_lock(&l->master);
+			pthread_mutex_lock(&l->w_lock);
 			l->end = 1;
-			return (pthread_mutex_unlock(&l->master), NULL);
+			return (pthread_mutex_unlock(&l->w_lock), NULL);
 		}
 		usleep(100);
 	}

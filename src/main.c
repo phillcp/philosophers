@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 22:59:28 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 14:24:42 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 19:25:50 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int	check_args(int argc, char **argv, t_list **lst)
 		l->nmr_eat = ft_atoi(argv[5]);
 	a = -1;
 	while (++a < l->nmr_philo)
+	{
+		init_philo(l, a);
 		pthread_mutex_init(&l->forks[a], NULL);
+	}
 	pthread_mutex_init(&l->master, NULL);
 	pthread_mutex_init(&l->w_lock, NULL);
 	pthread_mutex_init(&l->meat_lock, NULL);
@@ -38,13 +41,14 @@ int	start_threads(t_list *lst)
 	int	a;
 
 	a = -1;
-	lst->end = 0;
+	gettimeofday(&lst->start, NULL);
 	pthread_create(&lst->watcher, NULL, monitor, (void *)lst);
 	while (++a < lst->nmr_philo)
 	{
 		pthread_mutex_lock(&lst->master);
-		init_philo(lst, a);
-		if (pthread_create(&lst->philos[a].id, NULL, routine, (void *)&lst->philos[a]))
+		lst->philos[a].last_eat = get_time(lst);
+		if (pthread_create(&lst->philos[a].id, NULL, routine,
+				(void *)&lst->philos[a]))
 		{
 			printf("couldn't create thread nmr:%d\n", (a + 1));
 			return (0);
@@ -65,9 +69,12 @@ void	clear(t_list *l)
 	{
 		pthread_mutex_destroy(&l->forks[a]);
 	}
-	pthread_mutex_destroy(&l->master);
-	pthread_mutex_destroy(&l->w_lock);
-	pthread_mutex_destroy(&l->meat_lock);
+	if (l->nmr_philo)
+	{
+		pthread_mutex_destroy(&l->master);
+		pthread_mutex_destroy(&l->w_lock);
+		pthread_mutex_destroy(&l->meat_lock);
+	}
 	free(l);
 }
 
@@ -98,8 +105,7 @@ int	main(int argc, char **argv)
 	lst = ft_calloc(sizeof(t_list), 1);
 	if (!lst)
 		return (0);
-	if (!check_args(argc, argv, &lst) || (gettimeofday(&lst->start, NULL) == -1)
-		|| !start_threads(lst))
+	if (!check_args(argc, argv, &lst) || !start_threads(lst))
 	{
 		clear(lst);
 		printf("Args wrong\n");

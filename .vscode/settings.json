@@ -3,6 +3,7 @@
 		"philo.h": "c",
 		"text_encoding": "c",
 		"iomanip": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"stdio.h": "c"
 	}
 }
