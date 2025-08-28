@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:36:30 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/25 17:59:39 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:09:57 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,14 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return ((void *)arr);
 }
 
-void	go_eat(t_list *l, int id)
-{
-	if (pthread_mutex_lock(&l->w_lock))
-		return ;
-	if (l->philo_state == philo_running)
-		printf("%lld %d is eating\n", l->philos[id].last_eat, id + 1);
-	pthread_mutex_unlock(&l->w_lock);
-}
 
-void	go_get_fork(t_list *l, int id)
+int	print_m(t_philo *p, int id, char *str, int monitor)
 {
-	if (pthread_mutex_lock(&l->w_lock))
-		return ;
-	if (l->philo_state == philo_running)
-		printf("%ld %d has taken a fork\n", get_time(l), id + 1);
-	pthread_mutex_unlock(&l->w_lock);
-}
-
-void	go_think(t_list *l, int id)
-{
-	if (pthread_mutex_lock(&l->w_lock))
-		return ;
-	if (l->philo_state == philo_running)
-		printf("%ld %d is thinking\n", get_time(l), id + 1);
-	pthread_mutex_unlock(&l->w_lock);
+	if (pthread_mutex_lock(&(p->l->w_lock)))
+		return (1);
+	if (!p->l->end || monitor)
+		printf("%lu %d %s\n", get_time(p->l), id, str);
+	if (pthread_mutex_unlock(&(p->l->w_lock)))
+		return (1);
+	return (0);
 }

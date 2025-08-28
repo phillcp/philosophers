@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 21:44:44 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/26 13:49:18 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 14:12:28 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,12 @@ typedef struct s_philo
 	pthread_t		id;
 	struct s_list	*l;
 	int				s_id;
+	int				l_fork;
+	int				r_fork;
 	long long		last_eat;
 	int				eat_count;
+	int				finish_eat;
 }				t_philo;
-
-typedef struct s_watch
-{
-	pthread_t	id;
-}				t_watcher;
 
 typedef struct s_list
 {
@@ -51,11 +49,11 @@ typedef struct s_list
 	struct timeval		start;
 	struct timeval		curr;
 	int					eaten;
-	int					died;
+	int					end;
 	enum e_philo_state	philo_state;
-	t_watcher			*watcher;
-	t_philo				*philos;
-	pthread_mutex_t		*forks;
+	pthread_t			watcher;
+	t_philo				philos[200];
+	pthread_mutex_t		forks[200];
 	pthread_mutex_t		master;
 	pthread_mutex_t		w_lock;
 	pthread_mutex_t		meat_lock;
@@ -69,6 +67,7 @@ int			join_philos(t_list *l);
 void		clear(t_list *l);
 int			start_threads(t_list *lst);
 int			check_args(int argc, char **argv, t_list **lst);
+int			print_m(t_philo *p, int id, char *str, int monitor);
 
 /*
 **				philo
@@ -76,14 +75,14 @@ int			check_args(int argc, char **argv, t_list **lst);
 
 void		*routine(void *lst);
 long		get_time(t_list *l);
+void		init_philo(t_list *lst, int a);
 
 /*
 **				philo_extra
 */
 
-void		psleep(t_list *l, int id);
-int			peat(t_list *l, int id);
-void		tr_usleep(t_list *l, int id, long t);
+void		psleep(t_philo *l, int id);
+int			peat(t_philo *p, int id);
 
 /*
 **				monitor
@@ -97,7 +96,6 @@ void		init_table(t_list *l, char **argv);
 **				extra
 */
 
-void		err_exit(char *err, t_list *lst);
 int			ft_atoi(const char *str);
 int			ft_isnum(char *str);
 int			ft_isdigit(int c);
@@ -108,8 +106,5 @@ int			ft_isdigit(int c);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*ft_memset(void *str, int c, size_t n);
-void		go_get_fork(t_list *l, int id);
-void		go_think(t_list *l, int id);
-void		go_eat(t_list *l, int id);
 
 #endif

@@ -82,7 +82,7 @@ LANG := C
 ################################################################################
 
 # Compiler
-CC := clang
+CC := cc
 
 # Compiler flags
 CFLAGS := -Wall -Wextra -Werror -pthread
@@ -203,11 +203,10 @@ INC_DIRS += ${INC_ROOT}
 # Files
 ################################################################################
 
-SRCS_LIST = $(foreach dl,${SRC_DIRS_LIST},$(subst ${SPACE},:,$(strip $(foreach\
-	dir,$(subst :,${SPACE},${dl}),$(wildcard ${dir}*.c)))))
+SRCS_LIST = src/./extra2.c:src/./extra.c:src/./main.c:src/./monitor.c:src/./philo.c:src/./philo_extra.c
 OBJS_LIST = $(subst ${SRC_ROOT},${OBJ_ROOT},$(subst .c,.o,${SRCS_LIST}))
 
-SRCS = $(foreach dir,${SRC_DIRS},$(wildcard ${dir}*.c))
+SRCS = src/./extra2.c src/./extra.c src/./main.c src/./monitor.c src/./philo.c src/./philo_extra.c
 OBJS = $(subst ${SRC_ROOT},${OBJ_ROOT},${SRCS:.c=.o})
 DEPS = $(subst ${SRC_ROOT},${DEP_ROOT},${SRCS:.c=.d})
 

@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/26 13:49:44 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:08:22 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 long	get_time(t_list *l)
 {
 	long	ret;
+	struct timeval curr;
 
-	gettimeofday(&l->curr, NULL);
-	ret = (l->curr.tv_sec - l->start.tv_sec) * 1000
-		+ (l->curr.tv_usec - l->start.tv_usec) / 1000;
+	gettimeofday(&curr, NULL);
+	ret = (curr.tv_sec - l->start.tv_sec) * 1000
+		+ (curr.tv_usec - l->start.tv_usec) / 1000;
 	return (ret);
 }
 
@@ -34,19 +35,12 @@ static int	finish_eat(t_list *l, int id)
 	return (0);
 }
 
-void	one_philo(t_list *l, int id)
-{
-	printf("%ld %d has taken a fork\n", get_time(l), id + 1);
-	tr_usleep(l, id, l->t_die);
-	printf("%ld %d died\n", get_time(l), id + 1);
-}
-
 int	check_halt(t_list *l)
 {
-	pthread_mutex_lock(&l->master);
-	if (l->philo_state == philo_halt)
-		return (pthread_mutex_unlock(&l->master), 0);
-	pthread_mutex_unlock(&l->master);
+	pthread_mutex_lock(&(l->w_lock));
+	if (l->end)
+		return (pthread_mutex_unlock(&l->w_lock), 0);
+	pthread_mutex_unlock(&(l->w_lock));
 	return (1);
 }
 
@@ -55,23 +49,33 @@ void	*routine(void *philos)
 	t_philo	*p;
 
 	p = (t_philo *)philos;
-	if (p->l->nmr_philo == 1)
-	{
-		one_philo(p->l, p->s_id);
-		return (NULL);
-	}
 	if (((p->s_id + 1) % 2) == 0)
 		usleep(p->l->t_eat * 1000);
-	while (check_halt(p->l))
+	while (1)
 	{
 		if (finish_eat(p->l, p->s_id))
 			return (NULL);
-		if (!peat(p->l, p->s_id))
+		if (!peat(p, p->s_id))
+		{
+			pthread_mutex_lock(&p->l->w_lock);
+			p->l->end = 1;
+			return (pthread_mutex_unlock(&p->l->w_lock), NULL);
+		}
+		psleep(p, p->s_id);
+		if (!check_halt(p->l))
 			return (NULL);
-		psleep(p->l, p->s_id);
-		go_think(p->l, p->s_id);
 		if (p->l->nmr_philo % 2 == 1)
 			usleep((p->l->t_eat * 2 - p->l->t_sleep) * 1000);
 	}
 	return (NULL);
+}
+
+void	init_philo(t_list *lst, int a)
+{
+	lst->philos[a].s_id = a;
+	lst->philos[a].l = lst;
+	lst->philos[a].last_eat = get_time(lst);
+	lst->philos[a].finish_eat = 0;
+	lst->philos[a].l_fork = a;
+	lst->philos[a].r_fork = (a + 1) % lst->nmr_philo;
 }
