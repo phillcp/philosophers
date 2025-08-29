@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 19:25:28 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/29 14:04:43 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ long	get_time(t_list *l)
 
 	gettimeofday(&curr, NULL);
 	ret = (curr.tv_sec - l->start.tv_sec) * 1000
-		+ (curr.tv_usec - l->start.tv_usec ) / 1000;
+		+ (curr.tv_usec - l->start.tv_usec) / 1000;
 	return (ret);
 }
 
 static int	finish_eat(t_philo *p)
 {
 	pthread_mutex_lock(&p->l->meat_lock);
-	if (p->finish_eat)
+	if (p->finish_eat || p->eat_count <= p->l->nmr_eat)
 		return (pthread_mutex_unlock(&p->l->meat_lock), 1);
 	return (pthread_mutex_unlock(&p->l->meat_lock), 0);
 }
