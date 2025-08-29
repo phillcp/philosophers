@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/29 14:04:43 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/08/29 15:36:15 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ long	get_time(t_list *l)
 static int	finish_eat(t_philo *p)
 {
 	pthread_mutex_lock(&p->l->meat_lock);
-	if (p->finish_eat || p->eat_count <= p->l->nmr_eat)
+	if (p->finish_eat || (p->eat_count >= p->l->nmr_eat && p->l->nmr_eat != -1))
 		return (pthread_mutex_unlock(&p->l->meat_lock), 1);
 	return (pthread_mutex_unlock(&p->l->meat_lock), 0);
 }
