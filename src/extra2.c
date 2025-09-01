@@ -6,11 +6,19 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 17:36:30 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 19:25:19 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:09:24 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+long	get_curr_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+}
 
 void	*ft_memset(void *str, int c, size_t n)
 {

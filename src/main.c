@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 22:59:28 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 19:25:50 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:09:49 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	start_threads(t_list *lst)
 	int	a;
 
 	a = -1;
-	gettimeofday(&lst->start, NULL);
+	lst->start = get_curr_time();
 	pthread_create(&lst->watcher, NULL, monitor, (void *)lst);
 	while (++a < lst->nmr_philo)
 	{
@@ -102,6 +102,9 @@ int	main(int argc, char **argv)
 		printf("Nmr of args is wrong\n");
 		return (0);
 	}
+	if (argc == 6)
+		if (!ft_atoi(argv[5]))
+			return (0);
 	lst = ft_calloc(sizeof(t_list), 1);
 	if (!lst)
 		return (0);

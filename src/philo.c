@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:37:15 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/29 15:36:15 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:11:45 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,16 @@
 
 long	get_time(t_list *l)
 {
-	long			ret;
-	struct timeval	curr;
+	long	ret;
 
-	gettimeofday(&curr, NULL);
-	ret = (curr.tv_sec - l->start.tv_sec) * 1000
-		+ (curr.tv_usec - l->start.tv_usec) / 1000;
+	ret = get_curr_time() - l->start;
 	return (ret);
 }
 
 static int	finish_eat(t_philo *p)
 {
 	pthread_mutex_lock(&p->l->meat_lock);
-	if (p->finish_eat || (p->eat_count >= p->l->nmr_eat && p->l->nmr_eat != -1))
+	if (p->finish_eat)
 		return (pthread_mutex_unlock(&p->l->meat_lock), 1);
 	return (pthread_mutex_unlock(&p->l->meat_lock), 0);
 }
@@ -45,7 +42,7 @@ void	*routine(void *philos)
 	t_philo	*p;
 
 	p = (t_philo *)philos;
-	if (((p->s_id + 1) % 2) == 0)
+	if (((p->s_id) % 2) == 0)
 		usleep(p->l->t_eat * 1000);
 	while (1)
 	{
@@ -68,7 +65,7 @@ void	*routine(void *philos)
 
 void	init_philo(t_list *lst, int a)
 {
-	lst->philos[a].s_id = a;
+	lst->philos[a].s_id = a + 1;
 	lst->philos[a].l = lst;
 	lst->philos[a].finish_eat = 0;
 	lst->philos[a].l_fork = a;

@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 12:44:18 by fiheaton          #+#    #+#             */
-/*   Updated: 2025/08/28 19:01:52 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:12:39 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_eat(t_list *l)
 	while (++i < l->nmr_philo)
 	{
 		pthread_mutex_lock(&l->meat_lock);
-		if (!(l->philos[i].finish_eat) && (l->nmr_eat != 0))
+		if (!(l->philos[i].finish_eat))
 			return (pthread_mutex_unlock(&l->meat_lock), 0);
 		pthread_mutex_unlock(&l->meat_lock);
 	}
@@ -75,7 +75,7 @@ void	*monitor(void *list)
 			l->end = 1;
 			return (pthread_mutex_unlock(&l->w_lock), NULL);
 		}
-		usleep(100);
+		usleep(200);
 	}
 	return (NULL);
 }

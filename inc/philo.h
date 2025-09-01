@@ -6,7 +6,7 @@
 /*   By: fiheaton <fiheaton@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 21:44:44 by fheaton-          #+#    #+#             */
-/*   Updated: 2025/08/28 19:25:13 by fiheaton         ###   ########.fr       */
+/*   Updated: 2025/09/01 18:10:20 by fiheaton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_philo
 	int				s_id;
 	int				l_fork;
 	int				r_fork;
-	long long		last_eat;
+	long			last_eat;
 	int				eat_count;
 	int				finish_eat;
 }				t_philo;
@@ -45,10 +45,7 @@ typedef struct s_list
 	int					t_eat;
 	int					t_sleep;
 	int					nmr_eat;
-	int					claim;
-	struct timeval		start;
-	struct timeval		curr;
-	int					eaten;
+	long				start;
 	int					end;
 	enum e_philo_state	philo_state;
 	pthread_t			watcher;
@@ -106,5 +103,6 @@ int			ft_isdigit(int c);
 
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*ft_memset(void *str, int c, size_t n);
+long		get_curr_time(void);
 
 #endif
